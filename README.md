@@ -181,4 +181,4 @@ Sources: `06_AGGREGATOR/results/valid_aggregation_report.txt`, `test_aggregation
 
 ## License
 
-Final-year project — add your license here before public release.
+MIT — see [LICENSE](LICENSE).
