@@ -1,0 +1,126 @@
+# VULNERA — root pipeline manifest
+# All layer configs reference paths under `paths.*` where possible.
+# Run: python scripts/run_vulnera_pipeline.py --help
+
+project:
+  name: VULNERA
+  version: "1.0"
+  seed: 42
+  python: ">=3.10"
+
+# Canonical paths (relative to repository root)
+paths:
+  data_root: 01_Data_Processing/data
+  raw_root: 01_Data_Processing/data/raw
+  interim_root: 01_Data_Processing/data/interim
+  processed_root: 01_Data_Processing/data/processed
+  embeddings_root: 01_Data_Processing/data/embeddings
+  embeddings_subdir: max
+  reports_root: 01_Data_Processing/reports
+
+  encoder_base: 02_ML_Model/graphcodebert-base
+  encoder_active: 02_ML_Model/graphcodebert-base
+
+  tree_models_dir: 03_TREE
+  meta_selected: 04_META/window_stack/selected
+  score_selected: 05_SCORE/window_stack/selected
+  aggregator_artifacts: 06_AGGREGATOR/artifacts
+
+layers:
+  "01_data_processing":
+    dir: 01_Data_Processing
+    config: 01_Data_Processing/dataset_config.yaml
+  "02_ml_model":
+    dir: 02_ML_Model
+    config: 02_ML_Model/ml_config.yaml
+  "03_tree":
+    dir: 03_TREE
+    config: 03_TREE/tree_config.yaml
+  "04_meta":
+    dir: 04_META
+    config: 04_META/meta_config.yaml
+  "05_score":
+    dir: 05_SCORE
+    config: 05_SCORE/score_config.yaml
+  "06_aggregator":
+    dir: 06_AGGREGATOR
+    config: 06_AGGREGATOR/aggregator_config.yaml
+  "07_xai":
+    dir: 07_XAI
+    config: 07_XAI/xai_config.yaml
+  "08_llm":
+    dir: 08_LLM
+    config: 08_LLM/llm_config.yaml
+  "09_web":
+    dir: 09_WEB
+    config: 09_WEB/web_config.yaml
+
+# Ordered offline training pipeline (window-stack deployment)
+pipeline:
+  dataset_stage: "1a"
+  smoke_test: false
+
+  stages:
+    - id: data_prep
+      layer: "01_data_processing"
+      script: dataset_pipeline/run_pipeline.py
+      args: ["--stage", "{dataset_stage}"]
+      produces:
+        - "{processed_root}/train"
+        - "{processed_root}/valid"
+        - "{processed_root}/test"
+
+    - id: embed
+      layer: "01_data_processing"
+      script: dataset_pipeline/10_embedder.py
+      args: ["--stage", "{dataset_stage}"]
+      requires: [data_prep]
+      produces:
+        - "{embeddings_root}/{embeddings_subdir}/train/train_window_embeddings.parquet"
+
+    - id: train_trees
+      layer: "03_tree"
+      script: training_scripts/train_window_stack_trees.py
+      requires: [embed]
+      produces:
+        - "03_TREE/xgboost/window/final/xgboost_model.joblib"
+        - "03_TREE/lightgbm/window/final/lightgbm_model.joblib"
+        - "03_TREE/random_forest/window/final/random_forest_model.joblib"
+        - "03_TREE/extra_trees/window/final/extra_trees_model.joblib"
+
+    - id: train_meta
+      layer: "04_meta"
+      script: training_scripts/train_meta.py
+      args: ["--config", "meta_config.yaml", "--variant", "logistic"]
+      requires: [train_trees]
+      produces:
+        - "04_META/window_stack/selected/meta_model.joblib"
+
+    - id: calibrate
+      layer: "05_score"
+      script: training_scripts/calibrate_scores.py
+      args: ["--config", "score_config.yaml"]
+      requires: [train_meta]
+      produces:
+        - "05_SCORE/window_stack/selected/score_calibrator.joblib"
+        - "05_SCORE/window_stack/selected/calibrated_deployment.json"
+
+    - id: aggregate_eval
+      layer: "06_aggregator"
+      script: training_scripts/run_aggregation.py
+      args: ["--split", "valid"]
+      requires: [calibrate]
+
+    - id: aggregate_test
+      layer: "06_aggregator"
+      script: training_scripts/run_aggregation.py
+      args: ["--split", "test"]
+      requires: [aggregate_eval]
+
+  # Convenience bundle (same as run_window_stack_pipeline.py after data_prep + embed)
+  train_bundle:
+    - train_trees
+    - train_meta
+    - calibrate
+    - aggregate_eval
+    - aggregate_test

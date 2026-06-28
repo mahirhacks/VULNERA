@@ -1,0 +1,25 @@
+{
+  "selected_method": "isotonic",
+  "deployment_threshold_calibrated": 0.3,
+  "threshold_policy": {
+    "min_f1": 0.5,
+    "min_precision": 0.4,
+    "min_recall": 0.6
+  },
+  "valid_at_deployment_threshold": {
+    "threshold": 0.3,
+    "precision": 0.3564863702139309,
+    "recall": 0.9948701156952631,
+    "f1": 0.5248913074774697,
+    "roc_auc": 0.4754378084377149,
+    "avg_precision": 0.34516863531433506
+  },
+  "test_at_deployment_threshold": {
+    "threshold": 0.3,
+    "precision": 0.30774199501707117,
+    "recall": 0.9872705743043221,
+    "f1": 0.46922265212803377,
+    "roc_auc": 0.46809436915363567,
+    "avg_precision": 0.29596686753108786
+  }
+}

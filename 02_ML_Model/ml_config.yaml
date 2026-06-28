@@ -1,0 +1,8 @@
+# GraphCodeBERT encoder used by the embedder (01) and web scanner (09)
+
+encoder:
+  hub_id: microsoft/graphcodebert-base
+  model_path: 02_ML_Model/graphcodebert-base
+
+paths:
+  embeddings_root: 01_Data_Processing/data/embeddings

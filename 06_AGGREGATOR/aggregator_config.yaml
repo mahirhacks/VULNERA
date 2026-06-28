@@ -1,0 +1,15 @@
+run_aggregator:
+  split: test
+  scoring_mode: window_stack_aggregate
+  pool: max
+  window_pool: max
+  label_column: label
+  meta_config: 04_META/meta_config.yaml
+  meta_model: 04_META/window_stack/selected/meta_model.joblib
+  score_calibrator: 05_SCORE/window_stack/selected/score_calibrator.joblib
+  calibrated_deployment: 05_SCORE/window_stack/selected/calibrated_deployment.json
+  embeddings_root: 01_Data_Processing/data/embeddings
+  output_dir: 06_AGGREGATOR/results
+  artifacts_dir: 06_AGGREGATOR/artifacts
+  max_pool_tolerance: 1.0e-6
+  spread_weight: 0.25

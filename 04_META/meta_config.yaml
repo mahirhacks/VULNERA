@@ -1,0 +1,41 @@
+build_meta_table:
+  granularity: window
+  split: valid
+  pool: max
+  variant: base
+  embeddings_root: 01_Data_Processing/data/embeddings
+  label_column: label
+  embedding_column: embedding
+  output_path: 01_Data_Processing/data/interim/window_stack_meta_valid_predictions.parquet
+
+train_meta:
+  granularity: window
+  input_table: 01_Data_Processing/data/interim/window_stack_meta_valid_predictions.parquet
+  feature_columns:
+    - xgb
+    - lightgbm
+    - random_forest
+    - extra_trees
+  label_column: label
+  output_dir: 04_META/results/window_stack
+  variant_root: window_stack
+  pool: max
+  embeddings_root: 01_Data_Processing/data/embeddings
+  variant: base
+  xgboost_model: 03_TREE/xgboost/window/final/xgboost_model.joblib
+  lightgbm_model: 03_TREE/lightgbm/window/final/lightgbm_model.joblib
+  random_forest_model: 03_TREE/random_forest/window/final/random_forest_model.joblib
+  extra_trees_model: 03_TREE/extra_trees/window/final/extra_trees_model.joblib
+  meta_xgboost:
+    n_estimators: 100
+    max_depth: 3
+    learning_rate: 0.1
+    subsample: 0.9
+    colsample_bytree: 1.0
+    reg_lambda: 1.0
+    min_child_weight: 1.0
+    gamma: 0.0
+    scale_pos_weight: 2.0
+    tree_method: hist
+    device: cuda
+    random_state: 42

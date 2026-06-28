@@ -1,0 +1,61 @@
+.scan-progress {
+  width: 100%;
+  margin-top: 1.75rem;
+  padding: 0.15rem 0.1rem 0;
+}
+
+.scan-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.scan-progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: #101010;
+  overflow: hidden;
+}
+
+.scan-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d4d4d4 0%, #f4f4f5 100%);
+  transition: width 0.25s ease;
+}
+
+.scan-progress-pct {
+  flex-shrink: 0;
+  min-width: 2.75rem;
+  color: #f4f4f5;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.scan-progress-task {
+  margin-top: 0.55rem;
+  color: #9ca3af;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+/* ChatGPT-style dark theme overrides */
+.scan-progress-track {
+  background: var(--chat-bg-elevated);
+}
+
+.scan-progress-fill {
+  background: linear-gradient(90deg, var(--chat-accent) 0%, var(--chat-accent-hover) 100%);
+}
+
+.scan-progress-pct {
+  color: var(--chat-text);
+}
+
+.scan-progress-task {
+  color: var(--chat-text-subtle);
+}

@@ -1,0 +1,8 @@
+scan:
+  llm_provider: huggingface
+  max_functions: 50
+  use_cpu_embedder: false
+  llm_max_new_tokens: 192
+  llm_max_code_chars: 2400
+  llm_explanation_enabled: false
+  llm_chain_of_thought: true

@@ -1,0 +1,71 @@
+/* VS Code–style problem severity icons (flat, no emoji) */
+
+.severity-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.severity-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.severity-sm {
+  width: 14px;
+  height: 14px;
+}
+
+.severity-md {
+  width: 16px;
+  height: 16px;
+}
+
+.severity-lg {
+  width: 18px;
+  height: 18px;
+}
+
+.severity-vuln {
+  color: #f14c4c;
+}
+
+.severity-review {
+  color: #cca700;
+}
+
+.severity-diffuse {
+  color: #e08855;
+}
+
+.severity-safe {
+  color: #89d185;
+}
+
+.gutter-alert-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 1px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gutter-alert-btn:hover .severity-icon {
+  filter: brightness(1.15);
+}
+
+.gutter-alert-spacer {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-left: 1px;
+  flex-shrink: 0;
+}

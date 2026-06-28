@@ -1,0 +1,100 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-panel {
+  background: #050505;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 1.25rem;
+  width: min(420px, 92vw);
+  color: #ececec;
+}
+
+.modal-panel h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #a3a3a3;
+}
+
+.modal-field select,
+.modal-field input {
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+  background: #000;
+  color: #ececec;
+}
+
+.primary-btn {
+  width: 100%;
+  min-height: 2.5rem;
+  border: none;
+  border-radius: 10px;
+  background: #f4f4f5;
+  color: #171717;
+  font-weight: 600;
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+}
+
+/* ChatGPT-style dark theme overrides */
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.modal-panel {
+  background: var(--chat-bg-soft);
+  border-color: var(--chat-border);
+  color: var(--chat-text);
+}
+
+.modal-field {
+  color: var(--chat-text-muted);
+}
+
+.modal-field select,
+.modal-field input {
+  background: var(--chat-sidebar-deep);
+  border-color: var(--chat-border);
+  color: var(--chat-text);
+}
+
+.modal-field select:focus,
+.modal-field input:focus {
+  outline: 1px solid var(--chat-accent);
+  border-color: var(--chat-accent);
+}
+
+.primary-btn {
+  background: var(--chat-accent);
+  color: #ffffff;
+}
+
+/* Deep-black polish */
+.modal-panel {
+  background: #050505;
+  border-color: #1f1f1f;
+}
+
+.modal-field select,
+.modal-field input {
+  background: #000;
+  border-color: #202020;
+}

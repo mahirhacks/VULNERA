@@ -1,0 +1,311 @@
+.project-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+}
+
+.project-page-stack {
+  width: min(760px, 92vw);
+}
+
+.project-page-eyebrow {
+  margin-bottom: 0.75rem;
+  color: #9ca3af;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.project-page-stack h1 {
+  margin: 0;
+  color: #f4f4f5;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 600;
+}
+
+.project-page-stack > p {
+  margin: 0.85rem 0 0;
+  color: #a3a3a3;
+  line-height: 1.6;
+}
+
+.project-selected-files {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  background: #050505;
+}
+
+.project-selected-title {
+  color: #d4d4d4;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.project-selected-list {
+  margin: 0.55rem 0 0;
+  padding-left: 1.1rem;
+  color: #a3a3a3;
+  font-size: 0.84rem;
+}
+
+.project-files-section {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #2f2f2f;
+}
+
+.project-files-section h2 {
+  margin: 0 0 0.85rem;
+  color: #ececec;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.project-files-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.project-files-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: #050505;
+}
+
+.project-file-link {
+  color: #ececec;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.project-file-link:hover {
+  color: #fff;
+}
+
+.project-file-meta {
+  color: #8f8f8f;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.project-files-empty,
+.project-page-loading,
+.project-page-error {
+  color: #8f8f8f;
+  font-size: 0.9rem;
+}
+
+.project-page-error {
+  padding: 2rem;
+  color: #f87171;
+}
+
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 1rem;
+}
+
+.project-modal {
+  width: min(420px, 100%);
+  border: 1px solid #3a3a3a;
+  border-radius: 14px;
+  background: #050505;
+  padding: 1.25rem 1.35rem 1.1rem;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.project-modal h2 {
+  margin: 0;
+  color: #f4f4f5;
+  font-size: 1.1rem;
+}
+
+.project-modal-copy {
+  margin: 0.45rem 0 1rem;
+  color: #a3a3a3;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.project-modal-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #9ca3af;
+  font-size: 0.78rem;
+}
+
+.project-modal-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  background: #171717;
+  color: #f4f4f5;
+  font-size: 0.92rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.project-modal-input:focus {
+  outline: 1px solid #007acc;
+  border-color: #007acc;
+}
+
+.project-modal-error {
+  margin-top: 0.65rem;
+  color: #f87171;
+  font-size: 0.84rem;
+}
+
+.project-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.project-modal-btn {
+  border: none;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+}
+
+.project-modal-btn.ghost {
+  background: transparent;
+  color: #cfcfcf;
+}
+
+.project-modal-btn.ghost:hover {
+  background: #171717;
+}
+
+.project-modal-btn.primary {
+  background: #f4f4f5;
+  color: #171717;
+}
+
+.project-modal-btn.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* ChatGPT-style dark theme overrides */
+.project-page {
+  background: var(--chat-bg);
+  color: var(--chat-text);
+}
+
+.project-page-stack h1,
+.project-files-section h2,
+.project-file-link,
+.project-modal h2 {
+  color: var(--chat-text);
+}
+
+.project-page-eyebrow,
+.project-page-stack > p,
+.project-selected-list,
+.project-file-meta,
+.project-files-empty,
+.project-page-loading,
+.project-modal-copy,
+.project-modal-label {
+  color: var(--chat-text-subtle);
+}
+
+.project-selected-files,
+.project-files-list li,
+.project-modal {
+  background: var(--chat-bg-soft);
+  border-color: var(--chat-border);
+}
+
+.project-files-section {
+  border-top-color: var(--chat-border-soft);
+}
+
+.project-file-link:hover {
+  color: #ffffff;
+}
+
+.project-modal-backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.project-modal-input {
+  background: var(--chat-sidebar-deep);
+  border-color: var(--chat-border);
+  color: var(--chat-text);
+}
+
+.project-modal-input:focus {
+  outline-color: var(--chat-accent);
+  border-color: var(--chat-accent);
+}
+
+.project-modal-btn.ghost {
+  background: var(--chat-bg-elevated);
+  color: var(--chat-text);
+}
+
+.project-modal-btn.ghost:hover {
+  background: var(--chat-hover);
+}
+
+.project-modal-btn.primary {
+  background: var(--chat-accent);
+  color: #ffffff;
+}
+
+/* Deep-black polish */
+.project-page {
+  background: #000;
+}
+
+.project-selected-files,
+.project-files-list li,
+.project-modal {
+  background: #050505;
+  border-color: #1f1f1f;
+}
+
+.project-modal-input {
+  background: #000;
+  border-color: #202020;
+}
+
+.project-modal-btn.ghost {
+  background: #101010;
+}
+
+.project-modal-btn.ghost:hover {
+  background: #171717;
+}
+
+.project-files-section,
+.project-page-stack,
+.project-selected-list,
+.project-files-list {
+  background: transparent;
+}

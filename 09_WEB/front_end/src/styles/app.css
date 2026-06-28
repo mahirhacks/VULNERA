@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --chat-bg: #000000;
+  --chat-bg-elevated: #111111;
+  --chat-bg-soft: #0b0b0b;
+  --chat-sidebar: #000000;
+  --chat-sidebar-deep: #050505;
+  --chat-hover: #171717;
+  --chat-border: #242424;
+  --chat-border-soft: #171717;
+  --chat-text: #ececec;
+  --chat-text-muted: #b4b4b4;
+  --chat-text-subtle: #8b8b8b;
+  --chat-accent: #10a37f;
+  --chat-accent-hover: #13b38c;
+  --chat-danger: #f87171;
+  --chat-radius: 12px;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--chat-bg);
+  color: var(--chat-text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-panel {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  overflow: auto;
+  background: var(--chat-bg);
+}
+
+.main-panel:has(.vscode-results-workspace) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+* {
+  scrollbar-color: #343434 transparent;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

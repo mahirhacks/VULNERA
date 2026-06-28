@@ -1,0 +1,288 @@
+# CWE signature catalog — pre-2019 temporal guard; tri-layer engine (structural / semantic / contextual)
+
+temporal:
+  max_disclosure_year: 2019
+  strip_comment_hints_when_post_2019_cve: true
+
+signature_risk_boost:
+  enabled: true
+  smooth_enabled: true
+  agreement_alpha: 0.4
+  signature_only_alpha: 0.3
+  graduated_enabled: false
+  confirmed_score_floor: 0.85
+  soft_review_score_floor: 0.58
+  min_flag_score: 0.58
+  threshold_margin: 0.26
+  high_confidence: 0.80
+  confirmed_confidence: 0.88
+  graduated:
+    min_bump: 0.05
+    confidence_reference: 0.88
+    support_reference: 1.0
+corroboration:
+  enabled: true
+  omega: 0.15
+
+signatures:
+  buffer_overflow_unsafe_copy:
+    cwe: CWE-120
+    name: Buffer overflow (unsafe copy)
+    description: Classic unchecked copy into fixed buffer without bounds validation.
+    patterns:
+      - strcpy
+      - strcat
+      - gets(
+      - sprintf(
+      - vsprintf(
+      - wcscpy
+      - wcscat
+    keywords:
+      - strcpy
+      - strcat
+      - gets
+      - buffer overflow
+      - bounds check
+      - unchecked copy
+
+  buffer_overflow_memcpy:
+    cwe: CWE-787
+    name: Buffer overflow (memcpy / memmove)
+    description: Memory copy using attacker-controlled or unchecked length.
+    patterns:
+      - memcpy(
+      - memmove(
+    regexes:
+      - memcpy\s*\([^,]+,\s*[^,]+,\s*[^)]+\)
+      - memmove\s*\([^,]+,\s*[^,]+,\s*[^)]+\)
+    keywords:
+      - memcpy
+      - memmove
+      - payload_len
+      - unchecked length
+      - heap overflow
+      - out-of-bounds write
+
+  out_of_bounds_read:
+    cwe: CWE-125
+    name: Out-of-bounds read
+    description: Read past allocated buffer boundary (e.g. Heartbleed-style memcpy read).
+    patterns:
+      - memcpy(
+    regexes:
+      - memcpy\s*\(\s*\w+\s*,\s*\w+->\w+\s*,\s*\w+->\w+\s*\)
+      - memcpy\s*\([^,]+,\s*[^,]+,\s*\w+->\w+\s*\)
+    keywords:
+      - out-of-bounds read
+      - heartbeat
+      - payload_len
+      - memcpy
+      - information disclosure
+      - heartbleed
+
+  integer_overflow:
+    cwe: CWE-190
+    name: Integer overflow / signedness confusion
+    description: Size or index wrapped via signed/unsigned mismatch or narrow cast.
+    regexes:
+      - \(int\)\s*\(\s*\w+->\w+\s*-\s*\w+->\w+\s*\)
+      - \(int\)\s*\(\s*\w+\.\w+\s*-\s*\w+\.\w+\s*\)
+      - chunk_len\s*>\s*\(size_t\)
+      - remaining\s*=\s*\(int\)
+    keywords:
+      - integer overflow
+      - signed
+      - unsigned
+      - size_t
+      - wrap
+      - chunk_len
+      - remaining
+
+  heap_overflow:
+    cwe: CWE-122
+    name: Heap-based buffer overflow
+    description: Heap allocation followed by unchecked write or realloc growth.
+    patterns:
+      - realloc(
+      - malloc(
+    regexes:
+      - realloc\s*\([^,]+,\s*\w+\s*\+\s*\w+\s*\)
+    keywords:
+      - heap overflow
+      - realloc
+      - malloc
+      - chunk
+
+  format_string:
+    cwe: CWE-134
+    name: Format string vulnerability
+    description: User-controlled format specifier passed to printf family.
+    patterns:
+      - printf(
+      - fprintf(
+      - sprintf(
+      - snprintf(
+    regexes:
+      - printf\s*\(\s*\w+\s*\)
+      - fprintf\s*\([^,]+,\s*\w+\s*\)
+    keywords:
+      - format string
+      - printf
+      - user-controlled format
+
+  sql_injection:
+    cwe: CWE-89
+    name: SQL injection
+    description: SQL built via string concat or passed to query executor.
+    patterns:
+      - sqlite3_exec
+      - mysql_query
+      - pqexec
+      - "select "
+      - "insert "
+      - "update "
+      - "delete "
+    require_any:
+      - sqlite
+      - mysql
+      - pqexec
+      - query
+      - execute
+      - odbc
+    keywords:
+      - sql injection
+      - query
+      - concat
+      - sqlite
+      - mysql
+
+  command_injection:
+    cwe: CWE-78
+    name: OS command injection
+    description: Shell command built from untrusted input or environment expansion.
+    patterns:
+      - system(
+      - popen(
+      - execl(
+      - execv(
+      - execve(
+    regexes:
+      - system\s*\(\s*\w+\s*[\+\)]
+      - system\s*\(\s*tail\s*\+\s*1\s*\)
+    keywords:
+      - command injection
+      - system
+      - popen
+      - shell
+      - shellshock
+      - environment
+
+  path_traversal:
+    cwe: CWE-22
+    name: Path traversal
+    description: User-controlled path segment concatenated without normalization.
+    patterns:
+      - snprintf(
+      - sprintf(
+      - strcat(
+    regexes:
+      - snprintf\s*\([^,]+,\s*[^,]+,\s*"[^"]*%s[^"]*"\s*,\s*\w+\s*\)
+      - \.\./
+      - /\.\./
+    keywords:
+      - path traversal
+      - directory traversal
+      - pipename
+      - ../
+      - dlopen
+      - absolute path
+
+  race_condition_toctou:
+    cwe: CWE-362
+    name: Race condition (TOCTOU)
+    description: Security check and sensitive operation not atomic (check-then-use).
+    regexes:
+      - if\s*\(\s*!\s*\w+->writable\s*\)
+      - if\s*\(\s*!\s*\w+\.writable\s*\)
+    keywords:
+      - race condition
+      - toctou
+      - dirty cow
+      - writable
+      - without lock
+      - concurrent
+      - madvise
+
+  use_after_free:
+    cwe: CWE-416
+    name: Use after free
+    description: Dereference after free or double-free pattern.
+    patterns:
+      - free(
+    regexes:
+      - free\s*\(\s*\w+\s*\)\s*;[\s\S]{0,120}\*\s*\w+
+    keywords:
+      - use after free
+      - double free
+      - freed pointer
+
+  hardcoded_credentials:
+    cwe: CWE-798
+    name: Hard-coded credentials
+    description: Passwords, API keys, or secrets embedded in source.
+    patterns:
+      - password = "
+      - passwd = "
+      - api_key = "
+      - apikey = "
+      - secret = "
+    keywords:
+      - hardcoded
+      - password
+      - api_key
+      - secret
+      - credential
+
+  crypto_weak:
+    cwe: CWE-327
+    name: Weak cryptography
+    description: Broken or deprecated crypto primitives.
+    patterns:
+      - md5(
+      - sha1(
+      - des_
+      - rc4
+    keywords:
+      - weak crypto
+      - md5
+      - sha1
+      - deprecated cipher
+
+  auth_bypass:
+    cwe: CWE-287
+    name: Authentication bypass
+    description: Missing or flawed authentication check on sensitive path.
+    keywords:
+      - auth bypass
+      - authentication
+      - privilege
+      - admin
+      - bypass login
+    patterns:
+      - strcmp(
+      - admin
+    require_any:
+      - password
+      - token
+      - auth
+
+metadata_patterns:
+  cwe_comment:
+    regex: 'CWE[-\s]?(\d{1,4})'
+  cve_comment:
+    regex: 'CVE[-\s]?(\d{4}-\d{4,7})'
+
+semantic_threshold: 0.38
+structural_confidence: 0.92
+metadata_confidence: 0.88
+known_confidence_floor: 0.45

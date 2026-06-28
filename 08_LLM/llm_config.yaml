@@ -1,0 +1,55 @@
+model:
+  models_root_dir: 08_LLM/models
+  repo_id: Qwen/Qwen2.5-Coder-3B-Instruct
+  local_model_dir: 08_LLM/models/qwen2.5-coder-3b-instruct
+  trust_remote_code: true
+quick_presets:
+- id: qwen2.5-coder-7b
+  label: Qwen2.5-Coder-7B-Instruct
+  repo_id: Qwen/Qwen2.5-Coder-7B-Instruct
+  folder_name: qwen2.5-coder-7b-instruct
+- id: qwen2.5-coder-3b
+  label: Qwen2.5-Coder-3B-Instruct
+  repo_id: Qwen/Qwen2.5-Coder-3B-Instruct
+  folder_name: qwen2.5-coder-3b-instruct
+- id: qwen2.5-coder-1.5b
+  label: Qwen2.5-Coder-1.5B-Instruct
+  repo_id: Qwen/Qwen2.5-Coder-1.5B-Instruct
+  folder_name: qwen2.5-coder-1.5b-instruct
+quantization:
+  profile_id: q4_nf4
+  load_in_4bit: true
+  load_in_8bit: false
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_compute_dtype: float16
+  bnb_4bit_use_double_quant: true
+generation:
+  max_new_tokens: 384
+  temperature: 0.2
+  top_p: 0.9
+  do_sample: true
+  repetition_penalty: 1.05
+web_scan:
+  max_new_tokens: 192
+  max_prompt_tokens: 3072
+  max_code_chars: 2400
+  do_sample: false
+  clear_cuda_cache_each_call: true
+  unload_model_after_scan: false
+grounded_explanation:
+  enabled: true
+  top_tokens: 5
+  verification_pass: true
+  verification_max_tokens: 256
+  chain_of_thought: true
+  shap_attribution:
+    enabled: true
+    top_tokens: 5
+    max_evals: 80
+    batch_size: 4
+    fallback_heuristic: true
+system_prompt: 'You are a security code reviewer for the VULNERA C/C++ vulnerability
+  triage pipeline. You receive structured ML and signature context (CWE, suspicious
+  tokens, window scores). Explain only what the evidence supports: cite concrete identifiers
+  and lines from the code. Do not invent CVEs, CWEs, or vulnerabilities beyond the
+  provided context. Be concise (3-5 sentences unless verifying).'

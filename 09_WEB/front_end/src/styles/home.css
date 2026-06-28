@@ -1,0 +1,162 @@
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative;
+}
+
+.home-stack {
+  width: min(720px, 92vw);
+  text-align: center;
+}
+
+.home-eyebrow {
+  margin-bottom: 1.15rem;
+  color: #9ca3af;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+}
+
+.home-stack h1 {
+  margin: 0;
+  color: #f4f4f5;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.home-stack p {
+  margin: 1rem auto 0;
+  color: #a3a3a3;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.upload-shell {
+  margin-top: 2rem;
+  width: 100%;
+  border-radius: 9999px;
+  background: #0f0f0f;
+  padding: 0.28rem;
+  overflow: hidden;
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-btn {
+  width: 100%;
+  min-height: 2.9rem;
+  border: none;
+  border-radius: 9999px;
+  background: #0f0f0f;
+  color: #f4f4f5;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 1.35rem;
+  transition: background 0.15s ease;
+}
+
+.upload-btn:hover {
+  background: #171717;
+}
+
+.upload-supported {
+  margin-top: 0.65rem;
+  color: #8f8f8f;
+  font-size: 0.78rem;
+}
+
+.selected-file {
+  margin-top: 1rem;
+  color: #cfcfcf;
+  font-size: 0.84rem;
+}
+
+.start-btn {
+  width: 100%;
+  min-height: 2.9rem;
+  margin-top: 0.85rem;
+  border: none;
+  border-radius: 9999px;
+  background: #f4f4f5;
+  color: #171717;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.start-btn:hover {
+  background: #fff;
+}
+
+.home-error {
+  margin-top: 1rem;
+  color: #f87171;
+  font-size: 0.9rem;
+}
+
+/* ChatGPT-style dark theme overrides */
+.home-page {
+  background: var(--chat-bg);
+  color: var(--chat-text);
+}
+
+.home-eyebrow,
+.upload-supported {
+  color: var(--chat-text-subtle);
+}
+
+.home-stack h1,
+.selected-file {
+  color: var(--chat-text);
+}
+
+.home-stack p {
+  color: var(--chat-text-muted);
+}
+
+.upload-shell,
+.upload-btn {
+  background: var(--chat-bg-elevated);
+}
+
+.upload-btn {
+  color: var(--chat-text);
+}
+
+.upload-btn:hover {
+  background: #171717;
+}
+
+.start-btn {
+  background: var(--chat-text);
+  color: var(--chat-sidebar);
+}
+
+.start-btn:hover {
+  background: #ffffff;
+}
+
+/* Deep-black polish */
+.home-page {
+  background: #000;
+}
+
+.upload-shell,
+.upload-btn {
+  background: #0f0f0f;
+}
+
+.upload-btn:hover {
+  background: #171717;
+}
+
+.selected-file,
+.home-stack {
+  background: transparent;
+}

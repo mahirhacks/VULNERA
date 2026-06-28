@@ -1,0 +1,247 @@
+
+training_shared:
+  base_dir: "."
+  stage: "1a"
+  seed: 42
+
+  null_placeholders: ["None", "null", ""]
+
+  core_columns:
+    - id
+    - code
+    - label
+    - split
+    - source_dataset
+    - commit_hash
+    - commit_date
+    - file_path
+    - func_name
+    - project
+
+  paths:
+    interim_dir: "data/interim"
+    processed_dir: "data/processed"
+    raw_primevul_dir: "data/raw/primevul"
+    raw_primevul_train: "data/raw/primevul/jsonl/train.jsonl"
+    raw_primevul_valid: "data/raw/primevul/jsonl/valid.jsonl"
+    raw_primevul_test: "data/raw/primevul/jsonl/test.jsonl"
+    raw_diversevul: "data/raw/diversevul/diversevul_20230702.json"
+    raw_diversevul_metadata: "data/raw/diversevul/diversevul_20230702_metadata.json"
+    raw_bigvul_cleaned: "data/raw/bigvul/MSR_data_cleaned.csv"
+    raw_cvefixes_dir: "data/raw/cvefixes"
+    raw_cvefixes_jsonl: "data/raw/cvefixes/nvd-2021-06-09.jsonl"
+    raw_secvuleval_dir: "data/raw/secvuleval"
+    raw_secvuleval_sql: "data/raw/secvuleval/postgrescvedumper-2024-09-26.sql"
+    raw_secvuleval_patches: "data/raw/secvuleval/cvedataset-patches"
+
+  sources:
+    primevul: true
+    diversevul: false
+    bigvul: false
+    cvefixes: false
+    secvuleval: false
+
+  model:
+    codebert_name: "microsoft/graphcodebert-base"
+
+run_pipeline:
+  stage: "1a"
+
+1_normalizer:
+  output_dir: "data/interim/normalized"
+  output_prefix: "normalized"
+  output_chunks: 1
+  flush_rows: 25000
+  report: "reports/normalizer_report.md"
+
+  primevul_mapping:
+    jsonl_subdirs: ["jsonl", "paired"]
+
+  diversevul_mapping:
+    metadata_path_key: "raw_diversevul_metadata"
+
+  bigvul_mapping:
+    code: "func_before"
+    label: "vul"
+    id_field: "Unnamed: 0"
+    cve_field: "CVE ID"
+    cwe_field: "CWE ID"
+    publish_date: "Publish Date"
+
+  bigvul:
+    path_key: "raw_bigvul_cleaned"
+    chunksize: 10000
+
+  cvefixes:
+    prefer_sqlite_cli: true
+    search_dir_key: "raw_cvefixes_dir"
+    jsonl_path_key: "raw_cvefixes_jsonl"
+
+  secvuleval:
+    sql_path_key: "raw_secvuleval_sql"
+    search_dir_key: "raw_secvuleval_dir"
+    patches_dir_key: "raw_secvuleval_patches"
+    include_patches: true
+    patch_min_lines: 3
+
+# Raw corpus download (dataset_pipeline/downloader.py)
+# Toggle sources below, or pass --datasets / --stage on the CLI.
+download_datasets:
+  sources:
+    primevul: true
+    diversevul: false
+    bigvul: false
+    cvefixes: false
+    secvuleval: false
+  force: false
+  skip_existing: true
+
+  primevul:
+    train:
+      kind: huggingface
+      repo_id: colin/PrimeVul
+      filename: primevul_train.jsonl
+      dest_key: raw_primevul_train
+    valid:
+      kind: huggingface
+      repo_id: colin/PrimeVul
+      filename: primevul_valid.jsonl
+      dest_key: raw_primevul_valid
+    test:
+      kind: huggingface
+      repo_id: colin/PrimeVul
+      filename: primevul_test.jsonl
+      dest_key: raw_primevul_test
+
+  diversevul:
+    dataset:
+      kind: huggingface
+      repo_id: nidharshanen/diversevul
+      filename: diversevul_20230702.json
+      dest_key: raw_diversevul
+    metadata:
+      kind: gdrive
+      file_id: 19cJ7avNtsziaYkrrYuW7FeFdvgrxoNLc
+      dest_key: raw_diversevul_metadata
+
+  bigvul:
+    cleaned_csv:
+      kind: huggingface
+      repo_id: starsofchance/MSR_data_cleaned
+      filename: MSR_data_cleaned.zip
+      dest_key: raw_bigvul_cleaned
+      extract_member: MSR_data_cleaned.csv
+
+  cvefixes:
+    sql_dump:
+      kind: zenodo
+      record_id: "13118970"
+      filename: CVEfixes_v1.0.8.zip
+      dest_dir_key: raw_cvefixes_dir
+      extract_glob: "*.sql"
+      note: "~13 GB compressed; set record_id 4476564 and filename CVEfixes_v1.0.0.zip for the smaller v1.0.0 release"
+
+  secvuleval:
+    sql_dump:
+      kind: zenodo
+      record_id: "13983082"
+      filename: postgrescvedumper.sql.zip
+      dest_key: raw_secvuleval_sql
+      extract_glob: "*.sql"
+      rename_to: postgrescvedumper-2024-09-26.sql
+    patches:
+      kind: zenodo
+      record_id: "13983082"
+      filename: cvedataset-patches.zip
+      dest_dir_key: raw_secvuleval_patches
+      extract: true
+
+2_extractor:
+  output_dir: "data/interim/extracted"
+  output_prefix: "extracted"
+  parquet_batch_size: 50000
+  report: "reports/extractor_report.md"
+
+3_cleaner:
+  output_dir: "data/interim/cleaned"
+  output_prefix: "cleaned"
+  keep_comments: false
+  normalize_whitespace: true
+  drop_empty_code: true
+  min_lines: 3
+  min_tokens: 50
+  report: "reports/cleaner_report.md"
+
+4_deduplicator:
+  output_dir: "data/interim/deduped"
+  output_prefix: "deduped"
+  check_cross_split: true
+  near_dup_enabled: true
+  shingle_size: 5
+  jaccard_threshold: 0.85
+  num_perm: 128
+  report: "reports/deduplicator_report.md"
+
+5_temporal_splitter:
+  output_dir: "data/interim/split"
+  output_prefix: "split"
+  mode: "optimized"
+  assignment_scope: "global"
+  date_field: "commit_date"
+  commit_field: "commit_hash"
+  drop_rows_without_date: true
+  temporal_train_ratio: 0.7
+  temporal_valid_ratio: 0.2
+  temporal_test_ratio: 0.1
+  train_year_max_exclusive: 2021
+  valid_year_max_exclusive: 2022
+  test_year_max_exclusive: 2023
+  report: "reports/temporal_splitter_report.md"
+
+6_builder:
+  whole_output_dir: "whole"
+  train_file: "train.parquet"
+  valid_file: "valid.parquet"
+  test_file: "test.parquet"
+  split_field: "split"
+  output_format: "parquet"
+  report: "reports/builder_report.md"
+
+7_validator:
+  max_cross_split_exact_dupes: 0
+  max_cross_split_near_dupes: 0
+  check_cross_split_near_dup: true
+  report_truncation_at_tokens: 512
+  progress_every: 25000
+  report: "reports/validator_report.md"
+
+8_data_balancer:
+  enabled: true
+  splits: ["train", "valid", "test"]
+  label_field: "label"
+  vulnerable_label: 1
+  target_vulnerable_ratio: 0.30
+  target_benign_ratio: 0.70
+  seed: 42
+  report: "reports/balancer_report.md"
+
+9_batcher:
+  tokenizer_name: "microsoft/graphcodebert-base"
+  token_safe: 450
+  token_high: 480
+  token_max: 500
+  windowed_suffix: "windowed"
+  shard_prefix: "batch"
+  shard_subdirs:
+    train: "train"
+    valid: "valid"
+    test: "test"
+  report: "reports/windower_report.md"
+
+10_embedder:
+  model_path: "02_ML_Model/graphcodebert-base"
+  max_length: 512
+  batch_size: 16
+  fp16: true
+  output_subdir: "max"
+  embeddings_root: "01_Data_Processing/data/embeddings"

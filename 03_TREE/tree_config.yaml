@@ -1,0 +1,88 @@
+train_trees:
+  label_column: label
+  embedding_column: embedding
+  output_dir: 03_TREE/results
+  default_pool: max
+  embeddings_root: 01_Data_Processing/data/embeddings
+  models:
+  - name: xgboost
+    enabled: true
+    output_dir: 03_TREE/xgboost
+    trained_subdir: final
+  - name: lightgbm
+    enabled: true
+    output_dir: 03_TREE/lightgbm
+    trained_subdir: final
+  - name: random_forest
+    enabled: true
+    output_dir: 03_TREE/random_forest
+    trained_subdir: final
+  - name: extra_trees
+    enabled: true
+    output_dir: 03_TREE/extra_trees
+    trained_subdir: final
+
+train_window_trees:
+  label_column: label
+  embedding_column: embedding
+  window_id_column: window_id
+  function_group_column: function_group_id
+  output_dir: 03_TREE/results
+  default_pool: max
+  embeddings_root: 01_Data_Processing/data/embeddings
+
+xgboost:
+  n_estimators: 1000
+  max_depth: 8
+  learning_rate: 0.01
+  subsample: 0.9
+  colsample_bytree: 0.9
+  reg_lambda: 5.0
+  min_child_weight: 5
+  gamma: 0.0
+  scale_pos_weight: 1.5
+  decision_threshold: 0.28
+  tree_method: hist
+  device: cuda
+  eval_metric: logloss
+  early_stopping_rounds: 50
+lightgbm:
+  n_estimators: 1000
+  max_depth: -1
+  num_leaves: 127
+  learning_rate: 0.01
+  subsample: 0.9
+  colsample_bytree: 0.8
+  reg_lambda: 1.0
+  reg_alpha: 0.0
+  min_child_samples: 5
+  min_split_gain: 1.0
+  scale_pos_weight: 1.5
+  decision_threshold: 0.34
+  device: gpu
+  objective: binary
+  metric: binary_logloss
+  early_stopping_rounds: 50
+random_forest:
+  n_estimators: 500
+  max_depth: 12
+  min_samples_leaf: 2
+  min_samples_split: 10
+  max_features: 0.5
+  class_weight: balanced_subsample
+  bootstrap: true
+  max_samples: 0.8
+  decision_threshold: 0.34
+  n_jobs: -1
+extra_trees:
+  n_estimators: 800
+  max_depth: 12
+  min_samples_leaf: 10
+  min_samples_split: 10
+  max_features: 0.5
+  class_weight: balanced_subsample
+  min_impurity_decrease: 0.0
+  max_samples: 0.7
+  bootstrap: true
+  decision_threshold: 0.38
+  n_jobs: -1

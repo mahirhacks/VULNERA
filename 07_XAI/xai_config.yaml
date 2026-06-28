@@ -1,0 +1,26 @@
+# Offline XAI batch scripts (web scan uses xai_common.py directly)
+build_code_index:
+  split: test
+  processed_dir: 01_Data_Processing/data/processed
+  output_path: 07_XAI/artifacts/test_window_code_index.parquet
+
+build_ui_payload:
+  split: test
+  aggregation_parquet: 06_AGGREGATOR/artifacts/test_function_aggregation.parquet
+  window_predictions: 06_AGGREGATOR/artifacts/test_window_predictions.parquet
+  code_index: 07_XAI/artifacts/test_window_code_index.parquet
+  output_path: 07_XAI/artifacts/test_ui_payload.jsonl
+  sample_per_status: 25
+
+build_prompts:
+  ui_payload: 07_XAI/artifacts/test_ui_payload.jsonl
+  output_path: 07_XAI/artifacts/test_prompts.jsonl
+  sample_per_status: 5
+
+run_explainer:
+  prompts_path: 07_XAI/artifacts/test_prompts.jsonl
+  output_path: 07_XAI/artifacts/test_explanations.jsonl
+  provider: mock
+  llm_config: 08_LLM/llm_config.yaml
+  max_tokens: 500
+  temperature: 0.2

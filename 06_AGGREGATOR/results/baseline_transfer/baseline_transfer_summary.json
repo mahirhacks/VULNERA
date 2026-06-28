@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-06-28T09:14:55.725956+00:00",
+  "device": "cuda",
+  "max_samples": null,
+  "deployment_threshold_vulnera": 0.32,
+  "counts": {
+    "valid": 15163,
+    "test": 14170
+  },
+  "models": [
+    {
+      "id": "vulnera",
+      "display": "VULNERA (window-stack + corroboration)",
+      "family": "this work",
+      "trained_on": "temporal 1c corpora (1999\u20132019 train)",
+      "evaluated_on": "VULNERA valid split",
+      "threshold_policy": "fixed deployment \u03c4=0.32",
+      "valid": {
+        "threshold": 0.32,
+        "precision": 0.36283383618281373,
+        "recall": 0.7137832490657288,
+        "f1": 0.4811083123425692,
+        "tp": 3247,
+        "tn": 4912,
+        "fp": 5702,
+        "fn": 1302,
+        "support_pos": 4549,
+        "support_neg": 10614,
+        "n": 15163
+      },
+      "test": {
+        "threshold": 0.32,
+        "precision": 0.3543137489529736,
+        "recall": 0.6965419901199718,
+        "f1": 0.4697017766497462,
+        "tp": 2961,
+        "tn": 4523,
+        "fp": 5396,
+        "fn": 1290,
+        "support_pos": 4251,
+        "support_neg": 9919,
+        "n": 14170
+      }
+    },
+    {
+      "id": "codebert-devign",
+      "display": "CodeBERT (fine-tuned on Devign)",
+      "family": "Devign-line",
+      "huggingface_model": "mahdin70/codebert-devign-code-vulnerability-detector",
+      "trained_on": "Devign dataset (FFmpeg/QEMU; in-distribution for these checkpoints)",
+      "evaluated_on": "VULNERA temporal valid/test (2020\u20132024 commit years)",
+      "threshold_policy": "max F1 on VULNERA valid",
+      "valid_threshold_search_best_f1": 0.4618827238976759,
+      "valid": {
+        "threshold": 0.22,
+        "precision": 0.3004499139870319,
+        "recall": 0.9982413717300506,
+        "f1": 0.4618827238976759,
+        "tp": 4541,
+        "tn": 41,
+        "fp": 10573,
+        "fn": 8,
+        "support_pos": 4549,
+        "support_neg": 10614,
+        "n": 15163
+      },
+      "test": {
+        "threshold": 0.22,
+        "precision": 0.3,
+        "recall": 0.9964714184897672,
+        "f1": 0.4611616134124435,
+        "tp": 4236,
+        "tn": 35,
+        "fp": 9884,
+        "fn": 15,
+        "support_pos": 4251,
+        "support_neg": 9919,
+        "n": 14170
+      }
+    },
+    {
+      "id": "graphcodebert-devign",
+      "display": "GraphCodeBERT (fine-tuned on Devign)",
+      "family": "Devign-line",
+      "huggingface_model": "mahdin70/graphcodebert-devign-code-vulnerability-detector",
+      "trained_on": "Devign dataset (FFmpeg/QEMU; in-distribution for these checkpoints)",
+      "evaluated_on": "VULNERA temporal valid/test (2020\u20132024 commit years)",
+      "threshold_policy": "max F1 on VULNERA valid",
+      "valid_threshold_search_best_f1": 0.46156968190350567,
+      "valid": {
+        "threshold": 0.3799999999999999,
+        "precision": 0.3000263817438333,
+        "recall": 1.0,
+        "f1": 0.46156968190350567,
+        "tp": 4549,
+        "tn": 1,
+        "fp": 10613,
+        "fn": 0,
+        "support_pos": 4549,
+        "support_neg": 10614,
+        "n": 15163
+      },
+      "test": {
+        "threshold": 0.3799999999999999,
+        "precision": 0.2999717673630717,
+        "recall": 0.9997647612326511,
+        "f1": 0.46147999348498836,
+        "tp": 4250,
+        "tn": 1,
+        "fp": 9918,
+        "fn": 1,
+        "support_pos": 4251,
+        "support_neg": 9919,
+        "n": 14170
+      }
+    }
+  ]
+}
